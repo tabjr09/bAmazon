@@ -17,7 +17,7 @@ var connection = mysql.createConnection({
 connection.connect(function(err) {
   if (err) throw err;
   //console.log("connected as id " + connection.threadId);
-  displayItems();
+  shopperReady();
 });
 
 function displayItems(){
@@ -36,6 +36,25 @@ function displayItems(){
     
   );
 
+}
+
+function shopperReady(){
+  inquirer.prompt([
+    {
+      name: "answer",
+      type: "list",
+      message: "Are you ready to shop?.",
+      choices: ['Heck Yes!', 'Nope.']
+    }
+  ]).then(function(response){
+    if(response.answer === 'Heck Yes!'){
+      displayItems();
+    }
+    else{
+      console.log("Ok, come back when you're ready.");
+      connection.end();
+    }
+  });
 }
 
 function getOrder(){
@@ -64,13 +83,13 @@ function getOrder(){
       item_id:response.item
     },
     function(err, ans) {
-        console.log(ans[0].stock_quantity);
+        //console.log(ans[0].stock_quantity);
 
         var actual = ans[0].stock_quantity;
 
         if(response.quantity > actual){
           console.log('Insufficient quantity!');
-          getOrder();
+          shopperReady();
         }
         else{
           var newquantity = parseInt(actual) - parseInt(response.quantity);
@@ -112,16 +131,13 @@ function getOrder(){
         totalprice = parseFloat(ans[0].price) * parseInt(amount);
         //console.log('total price: '+ totalprice);
         console.log("Your total for " + amount + ' ' + ans[0].product_name + '(s) is: '+ '$' + totalprice + ' Thank you, come again!');
-        console.log('We now have '+ newquantity + ' '+ ans[0].product_name + '(s) in stock');
-
+        console.log('We now have '+ newquantity + ' '+ ans[0].product_name + '(s) in stock.');
+        shopperReady();
     }
   ); 
   
 }
 
-// 8. However, if your store _does_ have enough of the product, you should fulfill the customer's order.
-//    * This means updating the SQL database to reflect the remaining quantity.
-//    * Once the update goes through, show the customer the total cost of their purchase.
 
 
 
