@@ -118,16 +118,17 @@ function viewProducts(){
     connection.query(
         query,
         {
-          item_id:response.item
+            item_id:response.item
         },
         function(err, res) {
       
-            console.log("stock quant res: " + res);
-            console.log("response quant: " + response.quantity);
-           newquantity = parseInt(res[0].stock_quantity) + parseInt(response.quantity);
+            console.log("stock quant res: " + parseInt(res[0].stock_quantity));
+            console.log("response quant: " + parseInt(response.quantity));
+            var currentstock = res[0].stock_quantity;
+           newquantity = parseInt(currentstock) + parseInt(response.quantity);
         }
     );
-    console.log
+    
     console.log("new quantity: " + newquantity);
     var query = "Update products SET ? WHERE ?";
     connection.query(

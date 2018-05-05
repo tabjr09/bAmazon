@@ -128,7 +128,7 @@ function getOrder(){
     },
     function(err, ans) {
         //console.log("Product name and price :" + ans[0].product_name + '\n' + ans[0].price);
-        totalprice = parseFloat(ans[0].price) * parseInt(amount);
+        totalprice = (parseFloat(ans[0].price) * parseInt(amount)).toFixed(2);
         //console.log('total price: '+ totalprice);
         console.log("Your total for " + amount + ' ' + ans[0].product_name + '(s) is: '+ '$' + totalprice + ' Thank you, come again!');
         console.log('We now have '+ newquantity + ' '+ ans[0].product_name + '(s) in stock.');
